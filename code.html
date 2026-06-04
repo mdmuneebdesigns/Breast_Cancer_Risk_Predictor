@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Breast Cancer Risk Predictor - OncoGuard AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "on-tertiary-fixed-variant": "#763300",
+                            "surface-container-low": "#f3f4f5",
+                            "on-tertiary-container": "#ffcbaf",
+                            "background": "#f8f9fa",
+                            "outline": "#727783",
+                            "on-primary-fixed": "#001c3a",
+                            "surface-dim": "#d9dadb",
+                            "inverse-primary": "#a6c8ff",
+                            "primary-container": "#005dac",
+                            "secondary-fixed": "#d8e2ff",
+                            "on-secondary-fixed-variant": "#004493",
+                            "surface": "#f8f9fa",
+                            "on-tertiary-fixed": "#321200",
+                            "on-primary-container": "#bfd7ff",
+                            "tertiary-fixed-dim": "#ffb68d",
+                            "on-background": "#191c1d",
+                            "on-error": "#ffffff",
+                            "primary-fixed-dim": "#a6c8ff",
+                            "tertiary-container": "#984400",
+                            "on-primary-fixed-variant": "#004786",
+                            "error": "#ba1a1a",
+                            "secondary-fixed-dim": "#adc7ff",
+                            "inverse-on-surface": "#f0f1f2",
+                            "surface-container-highest": "#e1e3e4",
+                            "surface-container-lowest": "#ffffff",
+                            "on-tertiary": "#ffffff",
+                            "error-container": "#ffdad6",
+                            "primary-fixed": "#d4e3ff",
+                            "secondary": "#0058bb",
+                            "surface-container-high": "#e7e8e9",
+                            "on-surface-variant": "#414751",
+                            "on-secondary-container": "#fefcff",
+                            "surface-tint": "#065fae",
+                            "inverse-surface": "#2e3132",
+                            "on-primary": "#ffffff",
+                            "on-error-container": "#93000a",
+                            "surface-container": "#edeeef",
+                            "surface-bright": "#f8f9fa",
+                            "on-surface": "#191c1d",
+                            "tertiary-fixed": "#ffdbc9",
+                            "tertiary": "#733200",
+                            "surface-variant": "#e1e3e4",
+                            "primary": "#004583",
+                            "on-secondary": "#ffffff",
+                            "outline-variant": "#c1c6d3",
+                            "secondary-container": "#1471e6",
+                            "on-secondary-fixed": "#001a41",
+                            "brand-blue": "#005dac",
+                            "brand-dark": "#343a40",
+                            "brand-gray-light": "#dee2e6",
+                            "brand-gray-bg": "#f8f9fa",
+                            "brand-white": "#ffffff",
+                            "brand-red": "#dc3545",
+                            "brand-green": "#28a745"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.125rem",
+                            "lg": "0.25rem",
+                            "xl": "0.5rem",
+                            "full": "0.75rem"
+                    },
+                    "spacing": {
+                            "margin-mobile": "16px",
+                            "gutter": "24px",
+                            "unit": "4px",
+                            "container-padding": "24px",
+                            "margin-desktop": "48px",
+                            "input-group-gap": "12px"
+                    },
+                    "fontFamily": {
+                            "label-md": ["Inter"],
+                            "headline-lg": ["Hanken Grotesk"],
+                            "headline-md": ["Hanken Grotesk"],
+                            "data-mono": ["Inter"],
+                            "headline-sm": ["Hanken Grotesk"],
+                            "body-sm": ["Inter"],
+                            "headline-lg-mobile": ["Hanken Grotesk"],
+                            "body-md": ["Inter"],
+                            "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                            "label-md": ["14px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                            "data-mono": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                            "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                            "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Tab functionality */
+        .tab-content { display: none; }
+        .tab-content.active { display: grid; }
+        
+        /* Custom Inputs */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .custom-input {
+            width: 100%;
+            border: 1px solid #343a40;
+            border-radius: 0.125rem;
+            padding: 8px 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #191c1d;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+        .custom-input:focus {
+            outline: none;
+            border-color: #005dac;
+            box-shadow: 0 0 0 2px rgba(0, 93, 172, 0.2);
+        }
+        .custom-input::placeholder {
+            color: #727783;
+        }
+        
+        /* Loading Overlay */
+        #loading-overlay {
+            backdrop-filter: blur(4px);
+        }
+        .spinner {
+            border: 4px solid rgba(0, 93, 172, 0.1);
+            border-left-color: #005dac;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen font-body-md flex flex-col md:flex-row">
+<!-- JSON Component: SideNavBar -->
+<!-- Applying structural styles for desktop layout -->
+<nav class="hidden md:flex bg-surface-container-low dark:bg-inverse-surface border-r border-outline-variant fixed left-0 top-0 h-screen w-64 flex-col z-40 transition-all duration-200">
+<!-- Brand / Header -->
+<div class="p-gutter border-b border-outline-variant">
+<h1 class="font-headline-sm text-headline-sm font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="health_and_safety">health_and_safety</span>
+                Medical Portal
+            </h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Diagnostic Unit A</p>
+</div>
+<!-- Navigation Tabs -->
+<div class="flex-1 py-4 overflow-y-auto">
+<ul class="flex flex-col gap-1 px-4">
+<!-- Active Tab: New Prediction (Closest match to the dashboard intent) -->
+<li>
+<a aria-current="page" class="flex items-center gap-3 px-4 py-3 rounded text-primary dark:text-inverse-primary font-bold border-r-4 border-primary bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined fill" data-icon="add_chart">add_chart</span>
+<span class="font-label-md text-label-md">New Prediction</span>
+</a>
+</li>
+<!-- Inactive Tabs -->
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-md text-label-md">History</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-md text-label-md">Clinical Guidelines</span>
+</a>
+</li>
+</ul>
+</div>
+<!-- CTA & Footer -->
+<div class="p-gutter border-t border-outline-variant space-y-4">
+<button class="w-full bg-primary-container text-on-primary text-label-md font-label-md py-3 rounded flex justify-center items-center gap-2 hover:bg-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="science">science</span>
+                Predict Risk
+            </button>
+<ul class="flex flex-col gap-1">
+<li>
+<a class="flex items-center gap-3 px-2 py-2 rounded text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Help Center</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-2 py-2 rounded text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-highest dark:hover:bg-surface-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md text-label-md">Log Out</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- JSON Component: TopAppBar (Mobile Only - Suppressed on Desktop per guidelines) -->
+<header class="md:hidden bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">OncoGuard AI</h1>
+<div class="flex gap-4 text-primary dark:text-inverse-primary">
+<button aria-label="Account"><span class="material-symbols-outlined" data-icon="account_circle">account_circle</span></button>
+<button aria-label="Settings"><span class="material-symbols-outlined" data-icon="settings">settings</span></button>
+</div>
+</header>
+<!-- Canvas Container -->
+<div class="flex-1 mt-16 md:mt-0 p-margin-mobile md:p-margin-desktop grid grid-cols-1 lg:grid-cols-12 gap-gutter max-w-[1440px] mx-auto w-full">
+<!-- Main Form Canvas (Spans 8 cols on desktop) -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Page Header -->
+<header class="space-y-2 border-b-2 border-brand-dark pb-6">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background flex items-center gap-3">
+<span class="material-symbols-outlined text-brand-blue" data-icon="local_hospital" style="font-size: 32px;">local_hospital</span>
+                        Breast Cancer Risk Predictor
+                    </h2>
+<p class="font-headline-sm text-headline-sm text-on-surface-variant">AI-Powered Diagnostic Tool</p>
+<p class="font-body-md text-body-md text-outline">Get instant predictions using advanced ML models based on cytological features.</p>
+</header>
+<!-- Data Entry Form Container -->
+<section class="bg-brand-white border border-brand-gray-light rounded shadow-sm p-6 relative">
+<!-- Tabs Navigation -->
+<div class="flex border-b border-outline-variant mb-6 overflow-x-auto hide-scrollbar">
+<button class="tab-btn px-6 py-3 font-label-md text-label-md text-primary border-b-2 border-primary whitespace-nowrap" id="tab-btn-mean" onclick="switchTab('mean')">Mean Values</button>
+<button class="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary border-b-2 border-transparent whitespace-nowrap" id="tab-btn-se" onclick="switchTab('se')">SE Values</button>
+<button class="tab-btn px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary border-b-2 border-transparent whitespace-nowrap" id="tab-btn-worst" onclick="switchTab('worst')">Worst Values</button>
+</div>
+<form class="space-y-8" id="prediction-form">
+<!-- TAB 1: Mean Values -->
+<div class="tab-content active grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4" id="tab-mean">
+<!-- Feature Group 1 -->
+<div class="input-group">
+<label class="font-label-md text-label-md text-on-background" for="radius_mean">Radius Mean</label>
+<div class="relative">
+<input class="custom-input" id="radius_mean" name="radius_mean" placeholder="0.00" required="" step="any" type="number"/>
+<span class="absolute right-3 top-2 text-body-sm font-body-sm text-outline">μm</span>
+</div>
+</div>
+<div class="input-group">
+<label class="font-label-md text-label-md text-on-background" for="texture_mean">Texture Mean</label>
+<div class="relative">
+<input class="custom-input" id="texture_mean" name="texture_mean" placeholder="0.00" required="" step="any" type="number"/>
+</div>
+</div>
+<div class="input-group">
+<label class="font-label-md text-label-md text-on-background" for="perimeter_mean">Perimeter Mean</label>
+<div class="relative">
+<input class="custom-input" id="perimeter_mean" name="perimeter_mean" placeholder="0.00" required="" step="any" type="number"/>
+<span class="absolute right-3 top-2 text-body-sm font-body-sm text-outline">μm</span>
+</div>
+</div>
+<div class="input-group">
+<label class="font-label-md text-label-md text-on-background" for="area_mean">Area Mean</label>
+<div class="relative">
+<input class="custom-input" id="area_mean" name="area_mean" placeholder="0.00" required="" step="any" type="number"/>
+<span class="absolute right-3 top-2 text-body-sm font-body-sm text-outline">μm²</span>
+</div>
+</div>
+</div>
+<!-- TAB 2: SE Values -->
+<div class="tab-content grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4" id="tab-se">
+<div class="input-group">
+<label class="font-label-md text-label-md text-on-background" for="radius_se">Radius SE</label>
+<div class="relative">
+<input class="custom-input" id="radius_se" name="radius_se" placeholder="0.00" step="any" type="number"/>
+</div>
+</div>
+<div class="input-group">
+<label class="font-label-md text-label-md text-on-background" for="texture_se">Texture SE</label>
+<div class="relative">
+<input class="custom-input" id="texture_se" name="texture_se" placeholder="0.00" step="any" type="number"/>
+</div>
+</div>
+</div>
+<!-- TAB 3: Worst Values -->
+<div class="tab-content grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4" id="tab-worst">
+<div class="input-group">
+<label class="font-label-md text-label-md text-on-background" for="radius_worst">Radius Worst</label>
+<div class="relative">
+<input class="custom-input" id="radius_worst" name="radius_worst" placeholder="0.00" step="any" type="number"/>
+</div>
+</div>
+<div class="input-group">
+<label class="font-label-md text-label-md text-on-background" for="texture_worst">Texture Worst</label>
+<div class="relative">
+<input class="custom-input" id="texture_worst" name="texture_worst" placeholder="0.00" step="any" type="number"/>
+</div>
+</div>
+</div>
+<!-- Action Area -->
+<div class="flex flex-wrap gap-4 pt-6 border-t border-brand-dark mt-8">
+<button class="bg-brand-blue text-brand-white font-label-md text-label-md px-6 py-2 rounded flex items-center gap-2 hover:bg-primary transition-colors" onclick="simulatePrediction()" type="button">
+<span class="material-symbols-outlined" data-icon="troubleshoot">troubleshoot</span>
+                                Predict Risk
+                            </button>
+<button class="border border-brand-blue text-brand-blue font-label-md text-label-md px-6 py-2 rounded hover:bg-surface-container-highest transition-colors" type="reset">
+                                Clear Form
+                            </button>
+<button class="text-brand-blue font-label-md text-label-md px-4 py-2 rounded hover:bg-surface-container-highest transition-colors ml-auto" onclick="fillSampleData()" type="button">
+                                Load Sample Data
+                            </button>
+</div>
+</form>
+<!-- Loading Overlay (Hidden by default) -->
+<div class="hidden absolute inset-0 bg-white/80 flex-col justify-center items-center z-10" id="loading-overlay">
+<div class="spinner mb-4"></div>
+<p class="font-headline-sm text-headline-sm text-brand-blue">Analyzing cytological data...</p>
+<p class="font-body-sm text-body-sm text-outline mt-2">Connecting to Inference API</p>
+</div>
+</section>
+<!-- Results Section (Hidden by default, shown after prediction) -->
+<section class="hidden" id="results-section">
+<h3 class="font-headline-md text-headline-md text-on-background mb-4">Diagnostic Result</h3>
+<!-- Result Card Template (Will be modified by JS) -->
+<div class="bg-brand-white border border-brand-gray-light p-6 shadow-sm relative overflow-hidden" id="result-card">
+<!-- Left Accent Border -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-brand-blue" id="result-accent"></div>
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ml-2">
+<div>
+<p class="font-label-md text-label-md text-outline mb-1">AI Prediction</p>
+<h4 class="font-headline-lg text-headline-lg text-brand-blue flex items-center gap-2" id="result-diagnosis">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+                                    Awaiting Data
+                                </h4>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-outline mb-1">Confidence Score</p>
+<p class="font-data-mono text-headline-md text-on-background" id="result-confidence">--%</p>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant grid grid-cols-2 gap-4 text-sm">
+<div>
+<span class="text-outline">Model Version:</span>
+<span class="font-data-mono text-on-background ml-2">v2.4.1 (ResNet-50)</span>
+</div>
+<div class="text-right">
+<span class="text-outline">Timestamp:</span>
+<span class="font-data-mono text-on-background ml-2" id="result-timestamp">--:--:--</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar / History (Spans 4 cols on desktop) -->
+<div class="lg:col-span-4 space-y-6">
+<div class="bg-brand-white border border-brand-gray-light rounded shadow-sm h-full max-h-[800px] flex flex-col">
+<div class="p-4 border-b-2 border-brand-dark flex justify-between items-center bg-surface-container-low">
+<h3 class="font-headline-sm text-headline-sm text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+                            Recent Predictions
+                        </h3>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<!-- History Item 1 -->
+<div class="border border-outline-variant rounded p-3 hover:bg-surface-container-low transition-colors cursor-pointer border-l-4 border-l-brand-green">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-md text-label-md text-brand-green">Benign</span>
+<span class="font-data-mono text-body-sm text-outline">09:42 AM</span>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">
+                                R: 12.45 | T: 15.6 | P: 82.1
+                            </div>
+</div>
+<!-- History Item 2 -->
+<div class="border border-outline-variant rounded p-3 hover:bg-surface-container-low transition-colors cursor-pointer border-l-4 border-l-brand-red">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-md text-label-md text-brand-red">Malignant</span>
+<span class="font-data-mono text-body-sm text-outline">Yesterday</span>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant">
+                                R: 17.99 | T: 10.38 | P: 122.8
+                            </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            // Reset all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-primary', 'border-primary');
+                btn.classList.add('text-on-surface-variant', 'border-transparent');
+            });
+            
+            // Show selected content
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            // Highlight selected button
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            activeBtn.classList.remove('text-on-surface-variant', 'border-transparent');
+            activeBtn.classList.add('text-primary', 'border-primary');
+        }
+
+        // Fill Sample Data Function
+        function fillSampleData() {
+            document.getElementById('radius_mean').value = '17.99';
+            document.getElementById('texture_mean').value = '10.38';
+            document.getElementById('perimeter_mean').value = '122.8';
+            document.getElementById('area_mean').value = '1001.0';
+            
+            document.getElementById('radius_se').value = '1.095';
+            document.getElementById('texture_se').value = '0.9053';
+            
+            document.getElementById('radius_worst').value = '25.38';
+            document.getElementById('texture_worst').value = '17.33';
+        }
+
+        // Simulate API Prediction
+        function simulatePrediction() {
+            const overlay = document.getElementById('loading-overlay');
+            const resultsSection = document.getElementById('results-section');
+            const resultCard = document.getElementById('result-card');
+            const resultDiagnosis = document.getElementById('result-diagnosis');
+            const resultAccent = document.getElementById('result-accent');
+            const resultConfidence = document.getElementById('result-confidence');
+            const timestamp = document.getElementById('result-timestamp');
+
+            // Show loading
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            resultsSection.classList.remove('hidden');
+
+            // Simulate network delay
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+                
+                // Randomly decide Benign or Malignant for demo
+                const isMalignant = Math.random() > 0.5;
+                const confidence = (Math.random() * (99.9 - 85.0) + 85.0).toFixed(1);
+
+                timestamp.textContent = new Date().toLocaleTimeString();
+                resultConfidence.textContent = `${confidence}%`;
+
+                if (isMalignant) {
+                    resultDiagnosis.innerHTML = `<span class="material-symbols-outlined" data-icon="warning">warning</span> High Risk: Malignant`;
+                    resultDiagnosis.className = "font-headline-lg text-headline-lg text-brand-red flex items-center gap-2";
+                    resultAccent.className = "absolute left-0 top-0 bottom-0 w-2 bg-brand-red"; // Thicker border for alerts
+                } else {
+                    resultDiagnosis.innerHTML = `<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span> Low Risk: Benign`;
+                    resultDiagnosis.className = "font-headline-lg text-headline-lg text-brand-green flex items-center gap-2";
+                    resultAccent.className = "absolute left-0 top-0 bottom-0 w-1 bg-brand-green";
+                }
+
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            }, 2000); // 2 second mock delay
+        }
+    </script>
+</body></html>
