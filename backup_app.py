@@ -140,11 +140,9 @@ def predict(features):
         return None, None, None
     
     try:
-        # Convert to dataframe for proper feature order
         input_df = pd.DataFrame([features])
         input_scaled = scaler.transform(input_df)
         
-        # Make prediction
         prediction = model.predict(input_scaled)[0]
         probabilities = model.predict_proba(input_scaled)[0]
         confidence = probabilities[prediction] * 100
@@ -155,7 +153,6 @@ def predict(features):
         return None, None, None
 
 def get_feature_importance():
-    """Get feature importance from the ensemble model"""
     model = load_model()
     importances = []
     
@@ -163,18 +160,22 @@ def get_feature_importance():
         return None
     
     try:
-        # Get importances from XGBoost base estimator
         xgb_model = model.named_estimators_['xgb']
         xgb_importance = xgb_model.feature_importances_
         
         for name, importance in zip(FEATURE_NAMES, xgb_importance):
             importances.append({'feature': name, 'importance': importance})
         
-        # Sort by importance and get top 10
         importances.sort(key=lambda x: x['importance'], reverse=True)
         return importances[:10]
     except:
         return None
+
+# Helper function to clear widget states
+def clear_widget_states():
+    for key in list(st.session_state.keys()):
+        if key.startswith(('mean_', 'se_', 'worst_')):
+            del st.session_state[key]
 
 # Header
 col1, col2 = st.columns([1, 4])
@@ -191,28 +192,33 @@ st.sidebar.header("📋 Navigation")
 page = st.sidebar.radio("Select Mode", ["🔮 Predictor", "📊 Data Insights", "📜 History"])
 
 if page == "🔮 Predictor":
-    # Load sample buttons
+    # Load sample buttons with RERUN FIX
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.button("📥 Load Benign Sample", use_container_width=True):
             st.session_state.sample_loaded = "benign"
+            clear_widget_states() # Clears memory
+            st.rerun() # Instantly reloads the page with new data
     with col2:
         if st.button("📥 Load Malignant Sample", use_container_width=True):
             st.session_state.sample_loaded = "malignant"
+            clear_widget_states() # Clears memory
+            st.rerun() # Instantly reloads the page with new data
     with col3:
         if st.button("🆕 Clear Form", use_container_width=True):
             st.session_state.sample_loaded = None
+            clear_widget_states() # Clears memory
+            if 'prediction' in st.session_state:
+                del st.session_state['prediction'] # Clear prediction results too
+            st.rerun() # Instantly reloads the page with new data
     
     st.markdown("---")
     
-    # Create input fields in columns
     st.subheader("📏 Cell Nuclei Measurements")
     
-    # Initialize session state for inputs
     if 'sample_loaded' not in st.session_state:
         st.session_state.sample_loaded = None
     
-    # Load sample if requested
     sample_data = None
     if st.session_state.sample_loaded == "benign":
         sample_data = BENIGN_SAMPLE
@@ -221,7 +227,6 @@ if page == "🔮 Predictor":
         sample_data = MALIGNANT_SAMPLE
         st.warning("⚠️ Malignant sample data loaded")
     
-    # Create input fields
     features = {}
     
     # Group 1: Mean Values
